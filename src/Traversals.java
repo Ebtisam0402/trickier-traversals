@@ -74,7 +74,7 @@ public class Traversals {
    * @return a list of node values in a top-to-bottom order, or an empty list if the tree is null
    */
   public static <T> List<T> collectLevelOrderValues(TreeNode<T> node) {
-    
+
       List<T> result = new ArrayList<>();
 
       if (node == null) {
@@ -109,7 +109,20 @@ public class Traversals {
    * @return the number of unique values in the tree, or 0 if the tree is null
    */
   public static int countDistinctValues(TreeNode<Integer> node) {
-    return 0;
+   Set<Integer> set = new HashSet<>();
+    collectValues(node, set);
+    return set.size();
+}
+
+private static void collectValues(TreeNode<Integer> node, Set<Integer> set) {
+    if (node == null) {
+        return;
+    }
+
+    set.add(node.value);
+
+    collectValues(node.left, set);
+    collectValues(node.right, set);
   }
 
   /**
@@ -121,8 +134,24 @@ public class Traversals {
    * @return true if there exists a strictly increasing root-to-leaf path, false otherwise
    */
   public static boolean hasStrictlyIncreasingPath(TreeNode<Integer> node) {
-    return false;
-  }
+    if(node == null) {
+      return false;
+    }
+
+        // leaf
+    if (node.left == null && node.right == null) return true;
+
+    boolean left = node.left != null
+            && node.left.value > node.value
+            && hasStrictlyIncreasingPath(node.left);
+
+    boolean right = node.right != null
+            && node.right.value > node.value
+            && hasStrictlyIncreasingPath(node.right);
+
+    return left || right;
+}
+  
 
   // OPTIONAL CHALLENGE
   /**
